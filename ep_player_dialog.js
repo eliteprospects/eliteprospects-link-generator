@@ -22,7 +22,7 @@ var epPlayerLink;
             var data = tinyMCEPopup.getWindowArg('data');
             inputs.list.empty();
             for(i in data.players) {
-                inputs.list.append(jQuery('<li><a href="http://www.eliteprospects.com/player.php?id=' + data.players[i].id +'"><img src="http://www.eliteprospects.com/layout/flags/' + data.players[i].nationId + '.gif"/> ' + data.players[i].firstname + ' ' + data.players[i].lastname + '(' + data.players[i].pos + ')<br/>' + data.players[i].team.name + '</a></li>'));
+                inputs.list.append(jQuery('<li><a href="http://www.eliteprospects.com/player.php?player=' + data.players[i].id +'"><img src="http://www.eliteprospects.com/layout/flags/' + data.players[i].nationId + '.gif"/> ' + data.players[i].firstname + ' ' + data.players[i].lastname + '(' + data.players[i].pos + ')<br/>' + data.players[i].team.name + '</a></li>'));
             }
             jQuery('a', inputs.list).click(function(e) {
                 e.preventDefault();

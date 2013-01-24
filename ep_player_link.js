@@ -33,7 +33,7 @@
                             ed.windowManager.alert('No players found for: ' + selection);
                         } else if(data.count == 1) {
                             ed.execCommand("mceBeginUndoLevel");
-                            ed.execCommand("mceInsertLink", true, {href:'http://www.eliteprospects.com/player.php?id=' + data.players[0].id, target: '_blank'}, {skip_undo : 1});
+                            ed.execCommand("mceInsertLink", true, {href:'http://www.eliteprospects.com/player.php?player=' + data.players[0].id, target: '_blank'}, {skip_undo : 1});
                             ed.selection.collapse(0);
                             ed.execCommand("mceEndUndoLevel");
                         } else {
