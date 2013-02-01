@@ -5,6 +5,7 @@
  * Time: 11:44
  */
 
+function ep_player_dialog() {
 ?>
 
 <div style="display:none;">
@@ -15,4 +16,4 @@
         </ul>
     </form>
 </div>
-<?php
+<?php }
