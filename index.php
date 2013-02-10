@@ -5,7 +5,7 @@
 Plugin Name:  Eliteprospects
 Plugin URI:   http://eliteprospects.com
 Description:  Link to player profiles on Eliteprospects.com
-Version:      0.2
+Version:      0.3
 Author:       Carl Grundberg, Menmo
 Author URI:   http://www.menmo.se
 
@@ -32,6 +32,7 @@ include 'ep_player_dialog.php';
 
 function register_ep_button($buttons) {
     array_push($buttons, "ep_player_link");
+    array_push($buttons, "ef_player_link");
     return $buttons;
 }
 
