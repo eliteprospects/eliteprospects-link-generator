@@ -5,7 +5,7 @@
 Plugin Name:  Eliteprospects
 Plugin URI:   http://eliteprospects.com
 Description:  Link to player profiles on Eliteprospects.com
-Version:      0.3
+Version:      0.3.1
 Author:       Carl Grundberg, Menmo
 Author URI:   http://www.menmo.se
 
