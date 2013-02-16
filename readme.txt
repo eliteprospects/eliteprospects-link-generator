@@ -16,6 +16,8 @@ This plugin will add two buttons the TinyMCE editor in Wordpress.
 
 When you select a name and click one of the buttons, a search will be made to find a player with that name. The red button searches for Hockey players and the green button for football players.
 
+Please note that this plugin uses an Ajax call to http://www.eliteprospects.com to search for players.
+
 More information at:
 http://www.eliteprospects.com/
 
