@@ -1,4 +1,4 @@
-=== Everysport player link ===
+=== Eliteprospects player link ===
 Contributors: carlgrundberg
 Donate link:
 Tags: eliteprospects, hockey, football, sports, player, profile
