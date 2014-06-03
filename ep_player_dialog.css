@@ -1,19 +1,7 @@
-#ep-player-dialog-list a {
-    display: block;
-    padding: 10px;
-    background: #f9f9f9;
-    background-image: -webkit-gradient(linear,left bottom,left top,from(#ececec),to(#f9f9f9));
-    background-image: -webkit-linear-gradient(bottom,#ececec,#f9f9f9);
-    background-image: -moz-linear-gradient(bottom,#ececec,#f9f9f9);
-    background-image: -o-linear-gradient(bottom,#ececec,#f9f9f9);
-    background-image: linear-gradient(to top,#ececec,#f9f9f9);
+#ep-player-dialog-list li {
+    margin: 3px 0;
 }
 
-#ep-player-dialog-list a:hover {
-    background: #ececec;
-    background-image: -webkit-gradient(linear,left bottom,left top,from(#f9f9f9),to(#ececec));
-    background-image: -webkit-linear-gradient(bottom,#f9f9f9,#ececec);
-    background-image: -moz-linear-gradient(bottom,#f9f9f9,#ececec);
-    background-image: -o-linear-gradient(bottom,#f9f9f9,#ececec);
-    background-image: linear-gradient(to top,#f9f9f9,#ececec);
+#ep-player-dialog-list img {
+    vertical-align: baseline;
 }
