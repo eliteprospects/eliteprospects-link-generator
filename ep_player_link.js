@@ -6,7 +6,7 @@
 
 
 var epPlayerLinkPopup;
-var disabled = true;
+var disabled = false;
 var running = false;
 var sources = {
     'eliteprospects' : {
@@ -51,9 +51,9 @@ var sources = {
             });
 
             // Add a node change handler, selects the button in the UI when a text is selected
-            ed.onNodeChange.add(function(ed, cm, n, co) {
-                disabled = co && n.nodeName != 'A';
-            });
+            /*ed.on('NodeChange', function(e) {
+                disabled = e.element.nodeName != 'A';
+            });*/
         },
 
         /**
@@ -67,7 +67,7 @@ var sources = {
                 longname : 'Eliteprospects Player Link',
                 author : 'Carl Grundberg, Menmo',
                 authorurl : 'http://www.menmo.se',
-                version : 0.2
+                version : 0.4
             };
         }
     });
@@ -93,15 +93,19 @@ var sources = {
                     insertLink(ed, source, data.players[0].id);
                 } else {
                     ed.windowManager.open({
-                        id : 'ep-player-dialog',
-                        width : 480,
-                        height : "auto",
-                        wpDialog : true,
-                        title : 'Eliteprospects Player Profile'
-                    }, {
-                        plugin_url : url,
-                        data: data,
-                        source: source
+                        title : 'Eliteprospects Player Profile',
+                        body: [{
+                            type: 'label',
+                            label: 'Multiple players found. Please select one.'
+                        }, {
+                            type: 'container',
+                            html: playerList(data.players)
+                        }]
+                    });
+                    $('#ep-player-dialog-list a').click(function(e) {
+                        e.preventDefault();
+                        insertLink(ed, source, this.rel);
+                        ed.windowManager.close();
                     });
                 }
             }).error(function(jqXHR, textStatus, errorThrown) {
@@ -119,29 +123,11 @@ var sources = {
         ed.execCommand("mceEndUndoLevel");
     };
 
-    epPlayerLinkPopup = {
-
-        init : function() {
-            inputs.dialog = $('#ep-player-dialog');
-            inputs.list = $('#ep-player-dialog-list');
-
-            inputs.dialog.bind('wpdialogbeforeopen', epPlayerLinkPopup.beforeOpen);
-        },
-
-        beforeOpen : function() {
-            var data = tinyMCEPopup.getWindowArg('data');
-            var source = tinyMCEPopup.getWindowArg('source');
-            inputs.list.empty();
-            for(i in data.players) {
-                inputs.list.append(jQuery('<li><a href="#" rel="' + data.players[i].id +'"><img src="http://www.eliteprospects.com/layout/flags/' + data.players[i].nationId + '.gif"/> ' + data.players[i].firstname + ' ' + data.players[i].lastname + ' (' + data.players[i].pos + ') ' + data.players[i].team.name + '</a></li>'));
-            }
-            jQuery('a', inputs.list).click(function(e) {
-                e.preventDefault();
-                insertLink(tinyMCEPopup.editor, source, this.rel);
-                tinyMCEPopup.close();
-            })
+    var playerList = function(players) {
+        var list = $('<ul>', { id: 'ep-player-dialog-list'});
+        for(i in players) {
+            list.append($('<li><a href="#" rel="' + players[i].id +'"><img src="http://www.eliteprospects.com/layout/flags/' + players[i].nationId + '.gif"/> ' + players[i].firstname + ' ' + players[i].lastname + ' (' + players[i].pos + ') ' + players[i].team.name + '</a></li>'));
         }
+        return $('<div>').append(list).html();
     };
-
-    $(document).ready( epPlayerLinkPopup.init );
 })(jQuery);
