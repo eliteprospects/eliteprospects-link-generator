@@ -2,9 +2,9 @@
 Contributors: carlgrundberg
 Donate link:
 Tags: eliteprospects, hockey, football, sports, player, profile
-Requires at least: 3.0
-Tested up to: 3.5.1
-Stable tag: 0.3
+Requires at least: 3.9
+Tested up to: 3.9
+Stable tag: 0.4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,6 +29,8 @@ http://www.eliteprospects.com/
 
 == Changelog ==
 
+= 0.4 =
+* Updated to work with TinyMCE 4
 = 0.3 =
 * Added Elitefootball button.
 = 0.2 =
