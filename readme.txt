@@ -1,22 +1,22 @@
-=== Eliteprospects player link ===
+=== Eliteprospects link ===
 Contributors: carlgrundberg
 Donate link:
-Tags: eliteprospects, hockey, football, sports, player, profile
+Tags: eliteprospects, hockey, sports, player, profile
 Requires at least: 3.9
-Tested up to: 3.9
-Stable tag: 0.4.1
+Tested up to: 3.9.1
+Stable tag: 0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Adds buttons to the TinyMCE editor in WordPress to create links to player profiles on Eliteprospects.com.
+Adds buttons to the TinyMCE editor in WordPress to create links to profile pages on Eliteprospects.com.
 
 == Description ==
 
-This plugin will add two buttons the TinyMCE editor in Wordpress.
+This plugin will add a button to the TinyMCE editor in Wordpress.
 
-When you select a name and click one of the buttons, a search will be made to find a player with that name. The red button searches for Hockey players and the green button for football players.
+When you select a name and click one of the buttons, a search will be made to find a player or staff with that name.
 
-Please note that this plugin uses an Ajax call to http://www.eliteprospects.com to search for players.
+Please note that this plugin uses an Ajax call to http://www.eliteprospects.com to search for players and staff.
 
 More information at:
 http://www.eliteprospects.com/
@@ -28,6 +28,11 @@ http://www.eliteprospects.com/
 3. Select a player name when editing a post in the visual editor and press the 'EP' button.
 
 == Changelog ==
+
+= 0.5 =
+* Added staff links
+* Using new api from Eliteprospects.com
+* Renamed plugin since we now include more than players
 
 = 0.4 =
 * Updated to work with TinyMCE 4
