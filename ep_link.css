@@ -1,0 +1,18 @@
+.mce-container .ep-list li {
+    margin: 3px 0;
+}
+
+.mce-container .ep-list a {
+    line-height: 32px;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mce-container .ep-header {
+    text-transform: capitalize;
+    color: #444;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 30px;
+}

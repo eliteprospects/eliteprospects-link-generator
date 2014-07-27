@@ -1,4 +1,4 @@
-Eliteprospects player profile link
+Eliteprospects link
 ==================================
 
 1. Download zip of this repo and install as a normal Wordpress plugin.

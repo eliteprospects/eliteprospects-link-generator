@@ -2,10 +2,10 @@
 
 /**************************************************************************
 
-Plugin Name:  Eliteprospects Player Link
+Plugin Name:  Eliteprospects Link
 Plugin URI:   http://eliteprospects.com
-Description:  Link to player profiles on Eliteprospects.com
-Version:      0.4.1
+Description:  Link to Eliteprospects profile pages for players and staff
+Version:      0.5
 Author:       Carl Grundberg, Menmo
 Author URI:   http://www.menmo.se
 
@@ -18,24 +18,26 @@ function ep_addbuttons() {
         return;
 
     // Add only in Rich Editor mode
-    if ( get_user_option('rich_editing') == 'true') {
-        add_filter("mce_external_plugins", "add_ep_tinymce_plugin");
-        add_filter('mce_buttons', 'register_ep_button');
+    if ( get_user_option('rich_editing') != 'true') {
+        return;
     }
+    
+    add_filter("mce_external_plugins", "add_ep_tinymce_plugin");
+    add_filter('mce_buttons', 'register_ep_button');
 
     wp_enqueue_script('jquery');
     wp_enqueue_script('wpdialogs');
-    wp_enqueue_style('ep_player_dialog', plugins_url( 'ep_player_dialog.css' , __FILE__ ));
+    wp_enqueue_style('ep_link', plugins_url( 'ep_link.css' , __FILE__ ));
 }
 
 function register_ep_button($buttons) {
-    array_push($buttons, "ep_player_link");
-    array_push($buttons, "ef_player_link");
+    array_push($buttons, "ep_link");
+    //array_push($buttons, "ef_player_link");
     return $buttons;
 }
 
 function add_ep_tinymce_plugin($plugin_array) {
-    $plugin_array['ep_player_link'] = plugins_url( 'ep_player_link.js' , __FILE__ );
+    $plugin_array['ep_link'] = plugins_url( 'ep_link.js' , __FILE__ );
     return $plugin_array;
 }
 
