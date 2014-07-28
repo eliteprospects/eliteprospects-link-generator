@@ -9,9 +9,9 @@ Version:      0.5
 Author:       Carl Grundberg
 Author URI:   https://github.com/carlgrundberg
 
-**************************************************************************
+ **************************************************************************
 
-*/
+ */
 
 function ep_addbuttons() {
     if ( ! current_user_can('edit_posts') && ! current_user_can('edit_pages') )
@@ -21,7 +21,7 @@ function ep_addbuttons() {
     if ( get_user_option('rich_editing') != 'true') {
         return;
     }
-    
+
     add_filter("mce_external_plugins", "add_ep_tinymce_plugin");
     add_filter('mce_buttons', 'register_ep_button');
 
