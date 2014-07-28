@@ -1,10 +1,3 @@
-/**
- * User: Calle
- * Date: 2013-01-24
- * Time: 10:45
- */
-
-
 var epLinkPopup;
 var disabled = false;
 var running = false;
@@ -67,8 +60,8 @@ var sources = {
         getInfo : function() {
             return {
                 longname : 'Eliteprospects Link',
-                author : 'Carl Grundberg, Menmo',
-                authorurl : 'http://www.menmo.se',
+                author : 'Carl Grundberg',
+                authorurl : 'https://github.com/carlgrundberg',
                 version : 0.5
             };
         }

@@ -3,11 +3,11 @@
 /**************************************************************************
 
 Plugin Name:  Eliteprospects Link
-Plugin URI:   http://eliteprospects.com
+Plugin URI:   http://www.eliteprospects.com
 Description:  Link to Eliteprospects profile pages for players and staff
 Version:      0.5
-Author:       Carl Grundberg, Menmo
-Author URI:   http://www.menmo.se
+Author:       Carl Grundberg
+Author URI:   https://github.com/carlgrundberg
 
 **************************************************************************
 
