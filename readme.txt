@@ -16,10 +16,7 @@ This plugin will add a button to the TinyMCE editor in Wordpress.
 
 When you select a name and click one of the buttons, a search will be made to find a player or staff with that name.
 
-Please note that this plugin uses an Ajax call to http://www.eliteprospects.com to search for players and staff.
-
-More information at:
-http://www.eliteprospects.com/
+Please note that this plugin uses an Ajax call to http://api.eliteprospects.com to search for players and staff.
 
 == Installation ==
 
@@ -33,7 +30,6 @@ http://www.eliteprospects.com/
 * Added staff links
 * Using new api from Eliteprospects.com
 * Renamed plugin since we now include more than players
-
 = 0.4 =
 * Updated to work with TinyMCE 4
 = 0.3 =

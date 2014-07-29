@@ -29,26 +29,11 @@ var sources = {
                 handleCommand(ed, url, sources.eliteprospects);
             });
 
-            // ed.addCommand('mceEFPlayerLink', function() {
-            //     handleCommand(ed, url, sources.elitefootball);
-            // });
-
             ed.addButton('ep_link', {
                 title : 'Link to Eliteprospects profile pages for players and staff',
                 cmd : 'mceEPLink',
                 image : url + '/icon.png'
             });
-
-            // ed.addButton('ef_player_link', {
-            //     title : 'Link to Elitefootball player profile',
-            //     cmd : 'mceEFPlayerLink',
-            //     image : url + '/iconf.png'
-            // });
-
-            // Add a node change handler, selects the button in the UI when a text is selected
-            /*ed.on('NodeChange', function(e) {
-                disabled = e.element.nodeName != 'A';
-            });*/
         },
 
         /**
@@ -79,7 +64,6 @@ var sources = {
         var selection = tinymce.trim(ed.selection.getContent({format : 'text'}));
         if(selection.length > 0) {
             running = true;
-//            $('#content_ep_player_link').addClass('spinner');
             $.getJSON(source.search, { q: selection }, function(data) {
 //                $('#content_ep_player_link').removeClass('spinner');
                 var count = 0;

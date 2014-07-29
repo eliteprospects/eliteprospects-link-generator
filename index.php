@@ -32,7 +32,6 @@ function ep_addbuttons() {
 
 function register_ep_button($buttons) {
     array_push($buttons, "ep_link");
-    //array_push($buttons, "ef_player_link");
     return $buttons;
 }
 
