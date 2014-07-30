@@ -1,6 +1,7 @@
 var epLinkPopup;
 var disabled = false;
 var running = false;
+var limit = 25;
 var sources = {
     eliteprospects : {
         types: [{
@@ -10,7 +11,7 @@ var sources = {
             name: 'staffs',
             link: 'http://www.eliteprospects.com/staff.php?staff=[id]'
         }],
-        search : 'http://api.eliteprospects.com/beta/autosuggest?type=player%2Cstaff&limit=10&fields=id%2CfirstName%2ClastName%2CyearOfBirth%2CdateOfBirth%2CplayerPosition%2Ccountry.iso3166_3%2ClatestPlayerStats.team.name%2ClatestPlayerStats.season.startYear%2ClatestPlayerStats.season.endYear%2Cname%2CfullName%2C+latestStaffStats.team.name%2C+latestStaffStats.season.startYear%2ClatestStaffStats.season.endYear'
+        search : 'http://api.eliteprospects.com/beta/autosuggest?type=player%2Cstaff&limit='+limit+'&fields=id%2CfirstName%2ClastName%2CyearOfBirth%2CdateOfBirth%2CplayerPosition%2Ccountry.iso3166_3%2ClatestPlayerStats.team.name%2ClatestPlayerStats.season.startYear%2ClatestPlayerStats.season.endYear%2Cname%2CfullName%2C+latestStaffStats.team.name%2C+latestStaffStats.season.startYear%2ClatestStaffStats.season.endYear'
     }
 };
 
@@ -29,26 +30,11 @@ var sources = {
                 handleCommand(ed, url, sources.eliteprospects);
             });
 
-            // ed.addCommand('mceEFPlayerLink', function() {
-            //     handleCommand(ed, url, sources.elitefootball);
-            // });
-
             ed.addButton('ep_link', {
                 title : 'Link to Eliteprospects profile pages for players and staff',
                 cmd : 'mceEPLink',
                 image : url + '/icon.png'
             });
-
-            // ed.addButton('ef_player_link', {
-            //     title : 'Link to Elitefootball player profile',
-            //     cmd : 'mceEFPlayerLink',
-            //     image : url + '/iconf.png'
-            // });
-
-            // Add a node change handler, selects the button in the UI when a text is selected
-            /*ed.on('NodeChange', function(e) {
-                disabled = e.element.nodeName != 'A';
-            });*/
         },
 
         /**
@@ -62,7 +48,7 @@ var sources = {
                 longname : 'Eliteprospects Link',
                 author : 'Carl Grundberg',
                 authorurl : 'https://github.com/carlgrundberg',
-                version : 0.5
+                version : 0.
             };
         }
     });
@@ -79,15 +65,17 @@ var sources = {
         var selection = tinymce.trim(ed.selection.getContent({format : 'text'}));
         if(selection.length > 0) {
             running = true;
-//            $('#content_ep_player_link').addClass('spinner');
             $.getJSON(source.search, { q: selection }, function(data) {
-//                $('#content_ep_player_link').removeClass('spinner');
                 var count = 0;
                 var html = '';
+                var singleResult = null;
                 for(var i = 0; i < source.types.length; i++) {
                     var type = source.types[i].name; 
                     if(data[type] && data[type].metadata.count > 0) {
                         count += data[type].metadata.count;
+                        if(count == 1) {
+                            singleResult = source.types[i].link.replace('[id]', data[type].data[0].id);
+                        }
                         html += '<h2 class="ep-header">' + type + ' (' + data[type].metadata.count + ')</h2>';
                         html += resultList(data[type].data, type);
                     }
@@ -95,9 +83,11 @@ var sources = {
                 
                 if(count == 0) {
                     ed.windowManager.alert('No results for "' + selection + '".');
+                } else if(count == 1 && singleResult) {
+                    createLink(ed, singleResult);                    
                 } else {
                     ed.windowManager.open({
-                        title: 'Eliteprospects search results (max 10)',
+                        title: 'Eliteprospects search results (max '+limit+')',
                         body: [{
                             type: 'container',
                             html: html
@@ -120,7 +110,7 @@ var sources = {
         var list = '<ul class="ep-list ep-' + type + '-list">';
         for(var i = 0; i < items.length; i++) {
             var item = items[i];
-            list += '<li><a href="#" rel="' + item.id +'"><img src="http://beta.eliteprospects.com/images/flags/32/' + item.country.iso3166_3 + '.png"/> ' + item.firstName + ' ' + item.lastName + playerPosition(item.playerPosition) +latestTeam(item.latestPlayerStats || item.latestStaffStats) + '</a></li>';
+            list += '<li><a href="#" rel="' + item.id +'">' + (item.country? '<img src="http://beta.eliteprospects.com/images/flags/32/' + item.country.iso3166_3 + '.png"/> ' : '') + item.firstName + ' ' + item.lastName + playerPosition(item.playerPosition) +latestTeam(item.latestPlayerStats || item.latestStaffStats) + '</a></li>';
         }
         list += '<li></li></ul>';
         return list;
@@ -159,10 +149,14 @@ var sources = {
     
     var clickHandler = function(e, ed, link) {
         e.preventDefault();
+        createLink(ed, link);
+        ed.windowManager.close();
+    }
+    
+    var createLink = function(ed, link) {
         ed.execCommand("mceBeginUndoLevel");
         ed.execCommand("mceInsertLink", true, {href: link, target: '_blank'}, {skip_undo : 1});
         ed.selection.collapse(0);
         ed.execCommand("mceEndUndoLevel");
-        ed.windowManager.close();
     }
 })(jQuery);
