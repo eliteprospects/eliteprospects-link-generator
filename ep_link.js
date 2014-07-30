@@ -109,7 +109,7 @@ var sources = {
         var list = '<ul class="ep-list ep-' + type + '-list">';
         for(var i = 0; i < items.length; i++) {
             var item = items[i];
-            list += '<li><a href="#" rel="' + item.id +'"><img src="http://beta.eliteprospects.com/images/flags/32/' + item.country.iso3166_3 + '.png"/> ' + item.firstName + ' ' + item.lastName + playerPosition(item.playerPosition) +latestTeam(item.latestPlayerStats || item.latestStaffStats) + '</a></li>';
+            list += '<li><a href="#" rel="' + item.id +'">' + (item.country? '<img src="http://beta.eliteprospects.com/images/flags/32/' + item.country.iso3166_3 + '.png"/> ' : '') + item.firstName + ' ' + item.lastName + playerPosition(item.playerPosition) +latestTeam(item.latestPlayerStats || item.latestStaffStats) + '</a></li>';
         }
         list += '<li></li></ul>';
         return list;
