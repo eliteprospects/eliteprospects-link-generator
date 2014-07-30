@@ -4,7 +4,7 @@ Donate link:
 Tags: eliteprospects, hockey, sports, player, profile
 Requires at least: 3.9
 Tested up to: 3.9.1
-Stable tag: 0.5
+Stable tag: 0.5.1 
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,6 +29,10 @@ Please note that this plugin uses an Ajax call to http://api.eliteprospects.com 
 
 == Changelog ==
 
+= 0.5.1 =
+* Automatically create link if only one match
+* Bugfix for missing country
+* Increased limit to 25 results
 = 0.5 =
 * Added staff links
 * Using new api from Eliteprospects.com

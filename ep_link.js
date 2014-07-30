@@ -1,6 +1,7 @@
 var epLinkPopup;
 var disabled = false;
 var running = false;
+var limit = 25;
 var sources = {
     eliteprospects : {
         types: [{
@@ -10,7 +11,7 @@ var sources = {
             name: 'staffs',
             link: 'http://www.eliteprospects.com/staff.php?staff=[id]'
         }],
-        search : 'http://api.eliteprospects.com/beta/autosuggest?type=player%2Cstaff&limit=10&fields=id%2CfirstName%2ClastName%2CyearOfBirth%2CdateOfBirth%2CplayerPosition%2Ccountry.iso3166_3%2ClatestPlayerStats.team.name%2ClatestPlayerStats.season.startYear%2ClatestPlayerStats.season.endYear%2Cname%2CfullName%2C+latestStaffStats.team.name%2C+latestStaffStats.season.startYear%2ClatestStaffStats.season.endYear'
+        search : 'http://api.eliteprospects.com/beta/autosuggest?type=player%2Cstaff&limit='+limit+'&fields=id%2CfirstName%2ClastName%2CyearOfBirth%2CdateOfBirth%2CplayerPosition%2Ccountry.iso3166_3%2ClatestPlayerStats.team.name%2ClatestPlayerStats.season.startYear%2ClatestPlayerStats.season.endYear%2Cname%2CfullName%2C+latestStaffStats.team.name%2C+latestStaffStats.season.startYear%2ClatestStaffStats.season.endYear'
     }
 };
 
@@ -47,7 +48,7 @@ var sources = {
                 longname : 'Eliteprospects Link',
                 author : 'Carl Grundberg',
                 authorurl : 'https://github.com/carlgrundberg',
-                version : 0.5
+                version : 0.
             };
         }
     });
@@ -86,7 +87,7 @@ var sources = {
                     createLink(ed, singleResult);                    
                 } else {
                     ed.windowManager.open({
-                        title: 'Eliteprospects search results (max 10)',
+                        title: 'Eliteprospects search results (max '+limit+')',
                         body: [{
                             type: 'container',
                             html: html
