@@ -65,13 +65,16 @@ var sources = {
         if(selection.length > 0) {
             running = true;
             $.getJSON(source.search, { q: selection }, function(data) {
-//                $('#content_ep_player_link').removeClass('spinner');
                 var count = 0;
                 var html = '';
+                var singleResult = null;
                 for(var i = 0; i < source.types.length; i++) {
                     var type = source.types[i].name; 
                     if(data[type] && data[type].metadata.count > 0) {
                         count += data[type].metadata.count;
+                        if(count == 1) {
+                            singleResult = source.types[i].link.replace('[id]', data[type].data[0].id);
+                        }
                         html += '<h2 class="ep-header">' + type + ' (' + data[type].metadata.count + ')</h2>';
                         html += resultList(data[type].data, type);
                     }
@@ -79,6 +82,8 @@ var sources = {
                 
                 if(count == 0) {
                     ed.windowManager.alert('No results for "' + selection + '".');
+                } else if(count == 1 && singleResult) {
+                    createLink(ed, singleResult);                    
                 } else {
                     ed.windowManager.open({
                         title: 'Eliteprospects search results (max 10)',
@@ -143,10 +148,14 @@ var sources = {
     
     var clickHandler = function(e, ed, link) {
         e.preventDefault();
+        createLink(ed, link);
+        ed.windowManager.close();
+    }
+    
+    var createLink = function(ed, link) {
         ed.execCommand("mceBeginUndoLevel");
         ed.execCommand("mceInsertLink", true, {href: link, target: '_blank'}, {skip_undo : 1});
         ed.selection.collapse(0);
         ed.execCommand("mceEndUndoLevel");
-        ed.windowManager.close();
     }
 })(jQuery);
