@@ -1,20 +1,17 @@
-var epLinkPopup;
-var disabled = false;
 var running = false;
 var limit = 25;
-var sources = {
-    eliteprospects : {
-        types: [{
-            name: 'players',
-            link: 'http://www.eliteprospects.com/player.php?player=[id]'
-        }, {
-            name: 'staffs',
-            link: 'http://www.eliteprospects.com/staff.php?staff=[id]'
-        }],
-        search : 'http://api.eliteprospects.com/beta/autosuggest?type=player%2Cstaff&limit='+limit+'&fields=id%2CfirstName%2ClastName%2CyearOfBirth%2CdateOfBirth%2CplayerPosition%2Ccountry.iso3166_3%2ClatestPlayerStats.team.name%2ClatestPlayerStats.season.startYear%2ClatestPlayerStats.season.endYear%2Cname%2CfullName%2C+latestStaffStats.team.name%2C+latestStaffStats.season.startYear%2ClatestStaffStats.season.endYear'
-    }
-};
-
+//var playerNameRegex = /([A-Z][^\s,.]+\s+)+[A-Z][^\s,.]+/g;
+//var playerNameRegex =/[A-Z][^\s,.]+(?:\s+[A-Z][^\s,.]+)*(?:\s+[a-z][a-z\-]+){0,2}\s+[A-Z]([^\s,.]+)/g;
+var playerNameRegex =/[A-Z][^\s,.]+(?:\s+[A-Z][^\s,.]+)*\s+[A-Z]([^\s,.]+)/g;
+var types = [{
+    name: 'players',
+    link: 'http://www.eliteprospects.com/player.php?player=[id]'
+}, {
+    name: 'staffs',
+    link: 'http://www.eliteprospects.com/staff.php?staff=[id]'
+}];
+var search = 'http://api.eliteprospects.com/beta/autosuggest?type=player%2Cstaff&limit='+limit+'&fields=id%2CfirstName%2ClastName%2CyearOfBirth%2CdateOfBirth%2CplayerPosition%2Ccountry.iso3166_3%2ClatestPlayerStats.team.name%2ClatestPlayerStats.season.startYear%2ClatestPlayerStats.season.endYear%2Cname%2CfullName%2C+latestStaffStats.team.name%2C+latestStaffStats.season.startYear%2ClatestStaffStats.season.endYear';
+    
 (function($){
     tinymce.create('tinymce.plugins.EPLink', {
         /**
@@ -27,11 +24,16 @@ var sources = {
          */
         init : function(ed, url) {
             ed.addCommand('mceEPLink', function() {
-                handleCommand(ed, url, sources.eliteprospects);
+                var selection = tinymce.trim(ed.selection.getContent({format : 'text'}));
+                if(selection.length > 0) {
+                    searchName(ed, selection);   
+                } else {
+                    searchNodes(ed);
+                }
             });
 
             ed.addButton('ep_link', {
-                title : 'Link to Eliteprospects profile pages for players and staff',
+                title : 'Generate links to Eliteprospects profile pages',
                 cmd : 'mceEPLink',
                 image : url + '/icon.png'
             });
@@ -48,7 +50,7 @@ var sources = {
                 longname : 'Eliteprospects Link',
                 author : 'Carl Grundberg',
                 authorurl : 'https://github.com/carlgrundberg',
-                version : 0.
+                version : 0.6
             };
         }
     });
@@ -56,54 +58,100 @@ var sources = {
     // Register plugin
     tinymce.PluginManager.add('ep_link', tinymce.plugins.EPLink);
 
-    var inputs = {};
+    var searchNodes = function(ed, nodes) {
+        if(!nodes) {
+            nodes = ed.getBody().childNodes;
+        }
+        for(var i = 0; i < nodes.length; i++) {
+            var node = nodes[i];
+            if(node.nodeName == 'A') {
+                return;
+            }
+            
+            if(node.nodeType == 3) {
+                return searchTextNode(ed, node);    
+            }  else {
+                if(searchNodes(ed, node.childNodes)) {
+                    return true;
+                };
+            }        
+        }
+        return false;
+    }
+    
+    var searchTextNode = function(ed, textNode) {
+        var text = textNode.nodeValue.
+            replace(/[åäáà]/g, 'a').
+            replace(/[öóò]/g, 'o').
+            replace(/[éè]/g, 'e').
+            replace(/[č]/g, 'c').
+            replace(/[üúù]/g, 'u').
+            replace(/[íì]/g, 'i').
+            replace(/[ý]/g, 'y');
+            
+        var match;
+        while(match = playerNameRegex.exec(text)) {
+            var name = match[0].trim();
+            var range = ed.selection.getRng();
+            range.setStart(textNode, match.index);
+            range.setEnd(textNode, match.index + name.length);
+            ed.selection.setRng(range); 
+            searchName(ed, name, function(link) {
+                searchNodes(ed);
+            });
+            return true;
+        }
+        return false;
+    }
 
-    var handleCommand = function(ed, url, source) {
-        if ( disabled || running )
+    var searchName = function(ed, name, done) {
+        if ( running )
             return;
 
-        var selection = tinymce.trim(ed.selection.getContent({format : 'text'}));
-        if(selection.length > 0) {
-            running = true;
-            $.getJSON(source.search, { q: selection }, function(data) {
-                var count = 0;
-                var html = '';
-                var singleResult = null;
-                for(var i = 0; i < source.types.length; i++) {
-                    var type = source.types[i].name; 
-                    if(data[type] && data[type].metadata.count > 0) {
-                        count += data[type].metadata.count;
-                        if(count == 1) {
-                            singleResult = source.types[i].link.replace('[id]', data[type].data[0].id);
-                        }
-                        html += '<h2 class="ep-header">' + type + ' (' + data[type].metadata.count + ')</h2>';
-                        html += resultList(data[type].data, type);
+        running = true;
+        $.getJSON(search, { q: name }, function(data) {
+            var count = 0;
+            var html = '<p>Searching for "' + name + '".';
+            var singleResult = null;
+            for(var i = 0; i < types.length; i++) {
+                var type = types[i].name; 
+                if(data[type] && data[type].metadata.count > 0) {
+                    count += data[type].metadata.count;
+                    if(count == 1) {
+                        singleResult = types[i].link.replace('[id]', data[type].data[0].id);
                     }
+                    html += '<h2 class="ep-header">' + type + ' (' + data[type].metadata.count + ')</h2>';
+                    html += resultList(data[type].data, type);
                 }
-                
-                if(count == 0) {
-                    ed.windowManager.alert('No results for "' + selection + '".');
-                } else if(count == 1 && singleResult) {
-                    createLink(ed, singleResult);                    
+            }
+            
+            if(count == 0) {
+                if(done) {
+                    done();    
                 } else {
-                    ed.windowManager.open({
-                        title: 'Eliteprospects search results (max '+limit+')',
-                        body: [{
-                            type: 'container',
-                            html: html
-                        }]
-                    });
-                    $('.ep-header:first').closest('.mce-panel').find('.mce-foot').hide();
-                    for(var i = 0; i < source.types.length; i++) {
-                        attachClickEvent(source.types[i], ed);
-                    }
+                    ed.windowManager.alert('No results for "' + name + '".');    
                 }
-            }).error(function(jqXHR, textStatus, errorThrown) {
-                    ed.windowManager.alert('Error searching for players: ' + textStatus);
-                }).complete(function() { running = false; });
-        } else {
-            ed.windowManager.alert('Please select a name first.');
-        }
+            } else if(count == 1 && singleResult) {
+                createLink(ed, singleResult);            
+                done && done(singleResult);
+            } else {
+                ed.windowManager.open({
+                    title: 'Eliteprospects search results (max '+limit+')',
+                    body: [{
+                        type: 'container',
+                        html: html
+                    }]
+                });
+                $('.ep-header:first').closest('.mce-panel').find('.mce-foot').hide();
+                for(var i = 0; i < types.length; i++) {
+                    attachClickEvent(types[i], ed, done);
+                }
+            }
+        }).error(function(jqXHR, textStatus, errorThrown) {
+            ed.windowManager.alert('Error searching for players: ' + textStatus);
+        }).complete(function() { 
+            running = false; 
+        });
     };
 
     var resultList = function(items, type) {
@@ -133,30 +181,31 @@ var sources = {
             s += ')';
         }
         return s;
-    }
+    };
     
     var latestTeam = function(latestStats) {
         if(latestStats) {
             return ', ' + latestStats.team.name;
         }
-    }
+    };
     
-    var attachClickEvent = function(type, ed) {
+    var attachClickEvent = function(type, ed, done) {
         $('.ep-'+type.name+'-list a').click(function(e) {
-            clickHandler(e, ed, type.link.replace('[id]', this.rel));
+            clickHandler(e, ed, type.link.replace('[id]', this.rel), done);
         });
-    }
+    };
     
-    var clickHandler = function(e, ed, link) {
+    var clickHandler = function(e, ed, link, done) {
         e.preventDefault();
         createLink(ed, link);
         ed.windowManager.close();
-    }
+        done && done(link);
+    };
     
     var createLink = function(ed, link) {
         ed.execCommand("mceBeginUndoLevel");
         ed.execCommand("mceInsertLink", true, {href: link, target: '_blank'}, {skip_undo : 1});
         ed.selection.collapse(0);
         ed.execCommand("mceEndUndoLevel");
-    }
+    };
 })(jQuery);
