@@ -1,10 +1,10 @@
-=== Eliteprospects link ===
+=== Eliteprospects link generator ===
 Contributors: carlgrundberg
 Donate link:
 Tags: eliteprospects, hockey, sports, player, profile
 Requires at least: 3.9
 Tested up to: 3.9.1
-Stable tag: 0.5.1 
+Stable tag: 0.6.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,10 +16,13 @@ This plugin will add a button to the TinyMCE editor in Wordpress.
 
 When you select a name and click one of the buttons, a search will be made to find a player or staff with that name.
 
+If no name is selected the content is searched for names. Please note that this is an experimental feature and not all names will be found. 
+Please report names that's not found as an issue here: https://github.com/menmo/eliteprospects-link-generator/issues
+
 To show tooltips for your links you can use this plugin:
 https://wordpress.org/plugins/eliteprospects-tooltips/
 
-Please note that this plugin uses an Ajax call to http://api.eliteprospects.com to search for players and staff.
+This plugin uses an Ajax call to http://api.eliteprospects.com to search for players and staff.
 
 == Installation ==
 
@@ -29,6 +32,8 @@ Please note that this plugin uses an Ajax call to http://api.eliteprospects.com 
 
 == Changelog ==
 
+= 0.6 = 
+* Clicking the button when no name is selected searches the whole content for names.
 = 0.5.1 =
 * Automatically create link if only one match
 * Bugfix for missing country

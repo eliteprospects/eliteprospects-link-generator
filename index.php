@@ -2,10 +2,10 @@
 
 /**************************************************************************
 
-Plugin Name:  Eliteprospects Link
+Plugin Name:  Eliteprospects Link Generator
 Plugin URI:   https://wordpress.org/plugins/eliteprospects-player-link/
 Description:  Link to Eliteprospects profile pages for players and staff
-Version:      0.5.1 
+Version:      0.6.0
 Author:       Carl Grundberg
 Author URI:   https://github.com/carlgrundberg
 

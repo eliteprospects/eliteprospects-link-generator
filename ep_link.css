@@ -15,4 +15,15 @@
     font-size: 16px;
     font-weight: 600;
     line-height: 30px;
+    margin-top: 10px;
+}
+
+.mce-container .ep-header small {
+    text-transform: none;
+    vertical-align: baseline;
+    color: #888;
+}
+
+.mce-container .ep-p b {
+    font-weight: bold;
 }
