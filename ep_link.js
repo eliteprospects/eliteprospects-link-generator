@@ -146,11 +146,9 @@ var matches;
                         singleResult = types[i].link.replace('[id]', data[type].data[0].id);
                     }
                     html += '<h2 class="ep-header">' + type;
-                    if(data[type].metadata.count == limit) {
+                    if(data[type].metadata.count == limit && data[type].metadata.totalCount > limit) {
                         html += ' (' + data[type].metadata.totalCount + ')';
-                    }
-                    if(data[type].metadata.count > limit) {
-                        html += '<small>Showing '+ (data[type].metadata.offset + 1) + ' to ' + (data[type].metadata.offset + data[type].metadata.count) + '</small>';
+                        html += ' <small>Showing '+ (data[type].metadata.offset + 1) + ' to ' + (data[type].metadata.offset + data[type].metadata.count) + '</small>';
                     }
                     html += '</h2>';
                     html += resultList(data[type].data, type);
