@@ -1,7 +1,7 @@
 var loading = false;
 var limit = 10;
 var offset = 0;
-var playerNameRegex = /[A-Z][^A-Z\s,.&;]+\s+[A-Z][^A-Z\s,.&;]+/g;
+var playerNameRegex = /[A-Z][^\s,.&;]+\s+[A-Z][^\s,.&;]+/g;
 //var playerNameRegex =/[A-Z][^\s,.]+(?:\s+[A-Z][^\s,.]+)*(?:\s+[a-z][a-z\-]+){0,2}\s+[A-Z]([^\s,.]+)/g;
 //var playerNameRegex =/[A-Z][^A-Z\s,.](\s+[A-Z][^A-Z\s,.]+)*\s+[A-Z][^A-Z\s,.]/g;
 var types = [{
@@ -14,6 +14,7 @@ var types = [{
 var search = 'http://api.eliteprospects.com/beta/autosuggest?type=player%2Cstaff&limit='+limit+'&offset=[offset]&fields=id%2CfirstName%2ClastName%2CyearOfBirth%2CdateOfBirth%2CplayerPosition%2Ccountry.iso3166_3%2ClatestPlayerStats.team.name%2ClatestPlayerStats.season.startYear%2ClatestPlayerStats.season.endYear%2Cname%2CfullName%2C+latestStaffStats.team.name%2C+latestStaffStats.season.startYear%2ClatestStaffStats.season.endYear';
 var selection;
 var matches;
+var skip;
 
 (function($){
     tinymce.create('tinymce.plugins.EPLink', {
@@ -41,6 +42,7 @@ var matches;
                 } else {
                     selection = false;
                 }
+                skip = {};
                 startSearch(ed);
             });
 
@@ -59,7 +61,7 @@ var matches;
          */
         getInfo : function() {
             return {
-                longname : 'Eliteprospects Link',
+                longname : 'Eliteprospects Link Generator',
                 author : 'Carl Grundberg',
                 authorurl : 'https://github.com/carlgrundberg',
                 version : 0.6
@@ -104,7 +106,10 @@ var matches;
         var match;
         var regex = new RegExp(playerNameRegex);
         while(match = regex.exec(text)) {
-            matches.push({name: match[0].trim(), index: match.index, node: textNode});
+            var name = match[0].trim();
+            if(!skip[name]) {
+                matches.push({name: name, index: match.index, node: textNode});
+            }
             regex.lastIndex = match.index + 1;
         }
     }
@@ -179,7 +184,8 @@ var matches;
                         subtype: 'primary', 
                         onclick: function() {
                             ed.windowManager.close();
-                            done && done();
+                            skip[name] = true;
+                            done && done(false);
                         }
                     }]
                 };
