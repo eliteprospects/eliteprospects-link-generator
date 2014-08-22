@@ -16,7 +16,13 @@ var selection;
 var matches;
 var skip;
 
-(function($){
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ep_ga');
+
+(function($) {
+
     tinymce.create('tinymce.plugins.EPLink', {
         /**
          * Initializes the plugin, this will be executed after the plugin has been created.
@@ -31,6 +37,8 @@ var skip;
                 if(loading) {
                     return;
                 }
+                
+                ga('send', 'event', 'button', 'click', 'link button');
                 
                 var selectionContent = tinymce.trim(ed.selection.getContent({format : 'text'}));
                 if(selectionContent.length > 0) {
@@ -135,6 +143,7 @@ var skip;
 
     var searchName = function(ed, name, done) {
         loading = true;
+        ga('send', 'event', 'name', 'search', name);
         $.getJSON(search.replace('[offset]', offset), { q: name }, function(data) {
             loading = false;
             var count = 0;
@@ -185,6 +194,7 @@ var skip;
                         onclick: function() {
                             ed.windowManager.close();
                             skip[name] = true;
+                            ga('send', 'event', 'name', 'skip', name);
                             done && done(false);
                         }
                     }]
@@ -278,5 +288,15 @@ var skip;
         ed.execCommand("mceInsertLink", true, {href: link, target: '_blank'}, {skip_undo : 1});
         ed.selection.collapse(0);
         ed.execCommand("mceEndUndoLevel");
+        ga('send', 'event', 'link', 'create', link);
     };
+    
+    var ga = function() {
+        if(ep_ga) {
+            ep_ga.apply(this, arguments);
+        }
+    }
+    
+    ga('create', 'UA-2655407-13', 'auto');
+    ga('send', 'pageview');
 })(jQuery);
