@@ -3,8 +3,8 @@ Contributors: carlgrundberg
 Donate link:
 Tags: eliteprospects, hockey, sports, player, profile
 Requires at least: 3.9
-Tested up to: 3.9.1
-Stable tag: 0.6.1
+Tested up to: 4.9
+Stable tag: 0.6.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,6 +32,8 @@ This plugin uses an Ajax call to http://api.eliteprospects.com to search for pla
 
 == Changelog ==
 
+= 0.6.2 =
+* Added apikey
 = 0.6.1 = 
 * Bugfix for skip button
 = 0.6 = 

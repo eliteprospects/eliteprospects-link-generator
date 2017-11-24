@@ -5,7 +5,7 @@
 Plugin Name:  Eliteprospects Link Generator
 Plugin URI:   https://wordpress.org/plugins/eliteprospects-player-link/
 Description:  Link to Eliteprospects profile pages for players and staff
-Version:      0.6.1
+Version:      0.6.2
 Author:       Carl Grundberg
 Author URI:   https://github.com/carlgrundberg
 
@@ -13,7 +13,7 @@ Author URI:   https://github.com/carlgrundberg
 
  */
 
-function ep_addbuttons() {
+function ep_add_buttons() {
     if ( ! current_user_can('edit_posts') && ! current_user_can('edit_pages') )
         return;
 
@@ -40,4 +40,4 @@ function add_ep_tinymce_plugin($plugin_array) {
     return $plugin_array;
 }
 
-add_action('admin_init', 'ep_addbuttons');
+add_action('admin_init', 'ep_add_buttons');
