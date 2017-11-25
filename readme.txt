@@ -4,7 +4,7 @@ Donate link:
 Tags: eliteprospects, hockey, sports, player, profile
 Requires at least: 3.9
 Tested up to: 4.9
-Stable tag: 0.6.2
+Stable tag: 0.6.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
