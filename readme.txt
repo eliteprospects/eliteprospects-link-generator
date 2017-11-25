@@ -32,6 +32,8 @@ This plugin uses an Ajax call to http://api.eliteprospects.com to search for pla
 
 == Changelog ==
 
+= 0.6.3 =
+* SSL Support
 = 0.6.2 =
 * Added apikey
 = 0.6.1 = 

@@ -12,15 +12,10 @@ var types = [{
     link: 'http://www.eliteprospects.com/staff.php?staff=[id]'
 }];
 var apiKey = 'c4c474ba7d1ba52f80369de49416041b';
-var search = 'http://api.eliteprospects.com/beta/autosuggest?type=player%2Cstaff&limit='+limit+'&offset=[offset]&fields=id%2CfirstName%2ClastName%2CyearOfBirth%2CdateOfBirth%2CplayerPosition%2Ccountry.iso3166_3%2ClatestPlayerStats.team.name%2ClatestPlayerStats.season.startYear%2ClatestPlayerStats.season.endYear%2Cname%2CfullName%2C+latestStaffStats.team.name%2C+latestStaffStats.season.startYear%2ClatestStaffStats.season.endYear&apikey=' + apiKey;
+var search = 'https://ssl-api.eliteprospects.com/beta/autosuggest?type=player%2Cstaff&limit='+limit+'&offset=[offset]&fields=id%2CfirstName%2ClastName%2CyearOfBirth%2CdateOfBirth%2CplayerPosition%2Ccountry.iso3166_3%2ClatestPlayerStats.team.name%2ClatestPlayerStats.season.startYear%2ClatestPlayerStats.season.endYear%2Cname%2CfullName%2C+latestStaffStats.team.name%2C+latestStaffStats.season.startYear%2ClatestStaffStats.season.endYear&apikey=' + apiKey;
 var selection;
 var matches;
 var skip;
-
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ep_ga');
 
 (function($) {
 
@@ -38,8 +33,6 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
                 if(loading) {
                     return;
                 }
-                
-                ga('send', 'event', 'button', 'click', 'link button');
                 
                 var selectionContent = tinymce.trim(ed.selection.getContent({format : 'text'}));
                 if(selectionContent.length > 0) {
@@ -144,7 +137,6 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 
     var searchName = function(ed, name, done) {
         loading = true;
-        ga('send', 'event', 'name', 'search', name);
         $.getJSON(search.replace('[offset]', offset), { q: name }, function(data) {
             loading = false;
             var count = 0;
@@ -195,7 +187,6 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
                         onclick: function() {
                             ed.windowManager.close();
                             skip[name] = true;
-                            ga('send', 'event', 'name', 'skip', name);
                             done && done(false);
                         }
                     }]
@@ -289,15 +280,5 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
         ed.execCommand("mceInsertLink", true, {href: link, target: '_blank'}, {skip_undo : 1});
         ed.selection.collapse(0);
         ed.execCommand("mceEndUndoLevel");
-        ga('send', 'event', 'link', 'create', link);
     };
-    
-    var ga = function() {
-        if(ep_ga) {
-            ep_ga.apply(this, arguments);
-        }
-    }
-    
-    ga('create', 'UA-2655407-13', 'auto');
-    ga('send', 'pageview');
 })(jQuery);
