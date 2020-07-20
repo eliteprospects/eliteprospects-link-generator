@@ -5,14 +5,12 @@ var playerNameRegex = /[A-Z][^\s,.&;]+\s+[A-Z][^\s,.&;]+/g;
 //var playerNameRegex =/[A-Z][^\s,.]+(?:\s+[A-Z][^\s,.]+)*(?:\s+[a-z][a-z\-]+){0,2}\s+[A-Z]([^\s,.]+)/g;
 //var playerNameRegex =/[A-Z][^A-Z\s,.](\s+[A-Z][^A-Z\s,.]+)*\s+[A-Z][^A-Z\s,.]/g;
 var types = [{
-    name: 'players',
-    link: 'http://www.eliteprospects.com/player.php?player=[id]'
+    name: 'player',
 }, {
-    name: 'staffs',
-    link: 'http://www.eliteprospects.com/staff.php?staff=[id]'
+    name: 'staff',
 }];
 var apiKey = 'c4c474ba7d1ba52f80369de49416041b';
-var search = 'https://ssl-api.eliteprospects.com/beta/autosuggest?type=player%2Cstaff&limit='+limit+'&offset=[offset]&fields=id%2CfirstName%2ClastName%2CyearOfBirth%2CdateOfBirth%2CplayerPosition%2Ccountry.iso3166_3%2ClatestPlayerStats.team.name%2ClatestPlayerStats.season.startYear%2ClatestPlayerStats.season.endYear%2Cname%2CfullName%2C+latestStaffStats.team.name%2C+latestStaffStats.season.startYear%2ClatestStaffStats.season.endYear&apikey=' + apiKey;
+var search = 'https://api.eliteprospects.com/v1/search?type=player,staff&fields=player.name,player.detailedPosition,player.links.eliteprospectsUrl,player.nationality.flagUrl.small,staff.name,staff.links.eliteprospectsUrl,staff.nationality.flagUrl.small&apiKey=' + apiKey;
 var selection;
 var matches;
 var skip;
@@ -137,31 +135,21 @@ var skip;
 
     var searchName = function(ed, name, done) {
         loading = true;
-        $.getJSON(search.replace('[offset]', offset), { q: name }, function(data) {
+        $.getJSON(search.replace('[offset]', offset), { q: name }, function(response) {
             loading = false;
+            var data = response.data;
             var count = 0;
-            var total = 0;
             var html = '<p class="ep-p">Searching for <b>"' + name + '"</b>.';
             var singleResult = null;
-            var showPagination = false;
             for(var i = 0; i < types.length; i++) {
                 var type = types[i].name; 
-                if(data[type] && data[type].metadata.count > 0) {
-                    count += data[type].metadata.count;
-                    total = Math.max(total, data[type].metadata.totalCount);
+                if(data[type] && data[type].length > 0) {
+                    count += data[type].length;
                     if(count == 1) {
-                        singleResult = types[i].link.replace('[id]', data[type].data[0].id);
+                        singleResult = data[type][0].links.eliteprospectsUrl;
                     }
-                    html += '<h2 class="ep-header">' + type;
-                    if(data[type].metadata.count == limit && data[type].metadata.totalCount > limit) {
-                        html += ' (' + data[type].metadata.totalCount + ')';
-                        html += ' <small>Showing '+ (data[type].metadata.offset + 1) + ' to ' + (data[type].metadata.offset + data[type].metadata.count) + '</small>';
-                    }
-                    html += '</h2>';
-                    html += resultList(data[type].data, type);
-                    if(data[type].metadata.totalCount > limit) {
-                       showPagination = true;
-                    }
+                    html += '<h2 class="ep-header">' + type + '</h2>';
+                    html += resultList(data[type], type);
                 }
             }
             
@@ -190,27 +178,7 @@ var skip;
                             done && done(false);
                         }
                     }]
-                };
-                if(showPagination) {
-                    windowOptions.buttons.push({
-                        text: 'Previous ' + limit,
-                        onclick: function() {
-                            if(offset > 0) {
-                                offset -= limit;
-                                restart(ed, name, done);
-                            }
-                        }
-                    });
-                    windowOptions.buttons.push({
-                        text: 'Next ' + limit,
-                        onclick: function() {
-                            if(offset < total - limit) {
-                                offset += limit;
-                                restart(ed, name, done);
-                            }
-                        }
-                    });
-                }
+                };               
                 ed.windowManager.open(windowOptions);
                 for(var i = 0; i < types.length; i++) {
                     attachClickEvent(types[i], ed, done);
@@ -230,7 +198,7 @@ var skip;
         var list = '<ul class="ep-list ep-' + type + '-list">';
         for(var i = 0; i < items.length; i++) {
             var item = items[i];
-            list += '<li><a href="#" rel="' + item.id +'">' + (item.country? '<img src="http://beta.eliteprospects.com/images/flags/32/' + item.country.iso3166_3 + '.png"/> ' : '') + item.firstName + ' ' + item.lastName + playerPosition(item.playerPosition) +latestTeam(item.latestPlayerStats || item.latestStaffStats) + '</a></li>';
+            list += '<li><a href="' + item.links.eliteprospectsUrl +'">' + (item.nationality && item.nationality.flagUrl ? '<img src="' + item.nationality.flagUrl.small +'" />' : '') + item.name + playerPosition(item.detailedPosition) + '</a></li>';
         }
         list += '<li></li></ul>';
         return list;
@@ -239,33 +207,23 @@ var skip;
     var playerPosition = function(positionName) {
         var s = '';
         if(positionName) {
-            s += ' (';
-            switch(positionName) {
-                case 'LEFT_WING': 
-                    s += 'LW';
-                    break;
-                case 'RIGHT_WING': 
-                    s += 'RW';
-                    break;
-                default: 
-                    s += positionName[0];
-            }
-            s += ')';
+            s += ' (' + positionName + ')';
         }
         return s;
     };
     
-    var latestTeam = function(latestStats) {
-        if(latestStats) {
-            return ', ' + latestStats.team.name;
+    var placeOfBirth = function(place) {
+        if(place) {
+            return ', ' + place;
         }
         return '';
     };
     
     var attachClickEvent = function(type, ed, done) {
         $('.ep-'+type.name+'-list a').click(function(e) {
-            clickHandler(e, ed, type.link.replace('[id]', this.rel), done);
-        });
+            e.preventDefault();
+            clickHandler(e, ed, this.href, done);
+        }).each(function(i, a) { console.log(a); epTooltip(a); });
     };
     
     var clickHandler = function(e, ed, link, done) {

@@ -3,8 +3,8 @@ Contributors: carlgrundberg
 Donate link:
 Tags: eliteprospects, hockey, sports, player, profile
 Requires at least: 3.9
-Tested up to: 4.9
-Stable tag: 0.6.3
+Tested up to: 5.4.2
+Stable tag: 0.6.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -22,7 +22,7 @@ Please report names that's not found as an issue here: https://github.com/menmo/
 To show tooltips for your links you can use this plugin:
 https://wordpress.org/plugins/eliteprospects-tooltips/
 
-This plugin uses an Ajax call to http://api.eliteprospects.com to search for players and staff.
+This plugin uses an Ajax call to https://api.eliteprospects.com to search for players and staff.
 
 == Installation ==
 
@@ -32,6 +32,8 @@ This plugin uses an Ajax call to http://api.eliteprospects.com to search for pla
 
 == Changelog ==
 
+= 0.6.4 =
+* Updated to work with the new Eliteprospects API
 = 0.6.3 =
 * SSL Support
 = 0.6.2 =

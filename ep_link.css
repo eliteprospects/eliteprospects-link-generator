@@ -9,6 +9,11 @@
     text-overflow: ellipsis;
 }
 
+.mce-container .ep-list img {
+    vertical-align: baseline;
+    margin-right: 5px;
+}
+
 .mce-container .ep-header {
     text-transform: capitalize;
     color: #444;
