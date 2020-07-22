@@ -222,12 +222,13 @@ var skip;
     var attachClickEvent = function(type, ed, done) {
         $('.ep-'+type.name+'-list a').click(function(e) {
             e.preventDefault();
-            clickHandler(e, ed, this.href, done);
-        }).each(function(i, a) { console.log(a); epTooltip(a); });
+            clickHandler(ed, this.href, done);
+        }).each(function(i, a) { 
+          epTooltip(a); 
+        });
     };
     
-    var clickHandler = function(e, ed, link, done) {
-        e.preventDefault();
+    var clickHandler = function(ed, link, done) {
         createLink(ed, link);
         ed.windowManager.close();
         done && done(link);
